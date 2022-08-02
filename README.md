@@ -134,7 +134,9 @@ ros2 run rlb_viz rlb_viz
 *Note: While the emulator does not simulate any sensors, it can be made to return an empty scan as placeholder for compatibility's sake if desired*
 
 ## RLB experiment example: Custom controller
-![[RLB stack - Controller experimental setup with virtual environment and sensors in gazebo.svg]]
+
+![cover](https://github.com/vguillet/rlb_documentation/blob/main/RLB%20stack%20-%20Controller%20experimental%20setup%20with%20virtual%20environment%20and%20sensors%20in%20gazebo.svg?raw=true)
+
 
 1) The controller determines *Twist* instructions based on pose and sensors input. The instruction is then published on the */Turtle_1/cmd_vel* topic.
 2) The instruction is retreived by the agent node and executed
@@ -150,7 +152,9 @@ Packages used:
 
 
 ## RLB experiment example: Simple Goto task allocation
-![[RLB stack - Simple goto experimental setup.svg]]
+
+![cover](https://github.com/vguillet/rlb_documentation/blob/main/RLB%20stack%20-%20Simple%20goto%20experimental%20setup.svg?raw=true)
+
 1) The source sim is responsible for emitting *goal* messages. These will then be picked up by the agents controllers.
 2) The agents receive each goal, determine whether it is addressed to the agent they respectively are in charge of, and if so add the goal to their goal backlog. In parallel, each controller will follow its defined goto protocol to start undertaking goals as soon as possible, and will emit*Twist* instructions to the target agent's */cmd_vel* topic. The "state" of each controller is relayed to the visualised through *TeamComm* messages.
 3) The agents continously publish their pose as as *PoseStamped* message to their respective pose topic */Turtle_…/pose*. It is then picked up by the source sim, controllers, and visualiser.
@@ -165,7 +169,8 @@ Packages used:
 ---
 
 ## RLB experiment example: Goto task allocation with virtual environment and sensors
-![[RLB stack - Goto experimental setup with virtual environment and sensors in gazebo.svg]]
+
+![cover](https://github.com/vguillet/rlb_documentation/blob/main/RLB%20stack%20-%20Goto%20experimental%20setup%20with%20virtual%20environment%20and%20sensors%20in%20gazebo.svg?raw=true)
 
 The key difference between this experimental setup and the one described previously is the introduction of a syncroniser and a gazebo simulation. 
 1) The syncroniser is responsible for syncronising the pose of the robots with the ones in the gazebo simulation. 
@@ -180,7 +185,7 @@ Packages used:
 - **Controller**: rlb_controller
 - **Visualiser**: rlb_viz
 - **Agents**: Real robot obtained pose (optitrack) or rlb_turtles_emulator
-- ==**Syncroniser**: rlb_gazebo_bridge==
-- ==**Simulation**: Turtlebot3 gazebo simulation==
-- ==**Virtual environment/sensor suite**:  (user provided)==
+- **Syncroniser**: rlb_gazebo_bridge
+- **Simulation**: Turtlebot3 gazebo simulation
+- **Virtual environment/sensor suite**:  (user provided)
 ---
