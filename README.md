@@ -123,6 +123,21 @@ ros2 launch rlb_controller rlb_<# turtles>_launch.py
 
 *Note: One controller must be launched per agent/turtle*
 
+### Interupt
+Each controller posses an `/Interupt` topic, which can be used to control its behavior mid-run. An `RLBInterupt` message must be used, with the following structure:
+
+```
+builtin_interfaces/Time stamp
+string type
+string memo
+```
+Acceptable values for `type` are:
+- **KILL**: Locks the controller untill a **RESET** interupt is received
+- **CLEAR_GOAL**: Cancel the current goal
+- **CLEAR_BACKLOG**: Clear the goal backlog
+- **STOP_GOAL_AND_CLEAR_BACKLOG**: Cancel the current goal and clear the goal backlog
+- **RESET**: Reset kill flag, resuming controller process
+
 ## Package: RLB Turtle emulator
 Used ot emulated the phisical behavior of the Turtlebot3 robot. The emulator only simulates movement dynamics, and does not simulate sensors. A single emulator node can emulate multiple turtlebots
 
