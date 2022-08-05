@@ -1,4 +1,3 @@
-# Introduction
 The **R**obot **L**ab **B**ridge (**RLB**) framework is a generic robotics muti-agent interface based on ROS2 Foxy. 
 
 It aims at providing a framework and tools for running and testing single or multi-agent control and/or task allocation algorithms, using a combination of real and simulated data sources. The toolkit provides all necessary packages for fullfuling most simple experimental cases, from pre-implemented goto control laws for higher level coordination experiments to lower-level control. It also provides visualisation tools, a set of emulator for simulating robots/comunications/etc.
@@ -24,14 +23,12 @@ The RLB framework is build around a few key *Topics*, through which all packages
 
 Those include:
 - **/goals_backlog:** Used to pass Goal messages
-```
-string robot_id
-string goal_sequence_id
-string meta_action
-float64 priority
 
-geometry_msgs/Point[] sequence
-```
+- **/Turtle_#/pose:** Used to pass PoseStamped messages (standard ROS geometry msg), containing information about the position of a robot at a given time.
+
+- **/Turtle_#/interrupt:** Used to pass an RLBInterrupt message. More details about the interrupt functionality is provided further down in the *rlb_controller* package description.
+
+- **/team_comms:** Maint topic used for intra-rlb communication. Contains information about the collision detection, goal selection etc…
 
 ## RLB message types
 RLB uses a few custom messages, defined as follows:
@@ -48,10 +45,22 @@ geometry_msgs/Point[] sequence
 > [!Note]
 > In the case of the RLB controller, a larger priority value equals a larger priority. Goals will be undertaken by order of priority and FIFO within each priority level. Goals are not preemptive.
 
+To publish a goal manualy:
+```
+ros2 topic pub --once  /goals_backlog rlb_utils/msg/Goal "{robot_id: "Turtle_1", goal_sequence_id: "Test_goal", meta_action: "Set", priority: 1, sequence: [{x: 1, y: 1, z: 1}]}"ros2 topic pub --once  /goals_backlog rlb_utils/msg/Goal "{robot_id: "Turtle_1", goal_sequence_id: "Test_goal", meta_action: "Set", priority: 1, sequence: [{x: 1, y: 1, z: 1}]}"
+```
+
 
 - **TeamComm** messages: Generic message used internally by rlb to pass around relevant information to update various aspect of the framework. 
 ```
 string robot_id
+string type
+string memo
+```
+
+- **RLBInterrupt** messages: Message used to control the behavior of an RLB controller. Acceptable values for `type` include *KILL*, *CLEAR_GOAL*,  *CLEAR_BACKLOG*, *STOP_GOAL_AND_CLEAR_BACKLOG*, *RESET*. 
+```
+builtin_interfaces/Time stamp
 string type
 string memo
 ```
@@ -123,8 +132,8 @@ ros2 launch rlb_controller rlb_<# turtles>_launch.py
 
 *Note: One controller must be launched per agent/turtle*
 
-### Interupt
-Each controller posses an `/Interupt` topic, which can be used to control its behavior mid-run. An `RLBInterupt` message must be used, with the following structure:
+### Interrupt
+Each controller posses an `/Interrupt` topic, which can be used to control its behavior mid-run. An `RLBInterrupt` message must be used, with the following structure:
 
 ```
 builtin_interfaces/Time stamp
@@ -132,11 +141,16 @@ string type
 string memo
 ```
 Acceptable values for `type` are:
-- **KILL**: Locks the controller untill a **RESET** interupt is received
+- **KILL**: Locks the controller untill a **RESET** interrupt is received
 - **CLEAR_GOAL**: Cancel the current goal
 - **CLEAR_BACKLOG**: Clear the goal backlog
 - **STOP_GOAL_AND_CLEAR_BACKLOG**: Cancel the current goal and clear the goal backlog
 - **RESET**: Reset kill flag, resuming controller process
+
+To manualy send an interrupt:
+```
+ros2 topic pub --once  /Turtle_1/interrupt rlb_utils/msg/RLBInterrupt "{stamp: {sec: 1.0, nanosec: 1.0}, type: "KILL", memo: "Batterie_vide"}"
+```
 
 ## Package: RLB Turtle emulator
 Used ot emulated the phisical behavior of the Turtlebot3 robot. The emulator only simulates movement dynamics, and does not simulate sensors. A single emulator node can emulate multiple turtlebots
