@@ -50,7 +50,6 @@ To publish a goal manualy:
 ros2 topic pub --once  /goals_backlog rlb_utils/msg/Goal "{robot_id: "Turtle_1", goal_sequence_id: "Test_goal", meta_action: "Set", priority: 1, sequence: [{x: 1, y: 1, z: 1}]}"ros2 topic pub --once  /goals_backlog rlb_utils/msg/Goal "{robot_id: "Turtle_1", goal_sequence_id: "Test_goal", meta_action: "Set", priority: 1, sequence: [{x: 1, y: 1, z: 1}]}"
 ```
 
-
 - **TeamComm** messages: Generic message used internally by rlb to pass around relevant information to update various aspect of the framework. 
 ```
 string robot_id
@@ -63,6 +62,14 @@ string memo
 builtin_interfaces/Time stamp
 string type
 string memo
+```
+
+### Recording topics
+RLB topics' QOS differs from ROS's bag default one. As such a QOS override is necessary, and provided if necessary. It can be found in the `rlb_misc` folder.
+
+To bag the RLB key topics:
+```
+ros2 bag record -o <new directory name> --qos-profile-overrides-path qos_override.yaml /Turtle_1/pose /Turtle_1/interrupt /goals_backlog
 ```
 
 # Installation
