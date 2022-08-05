@@ -28,7 +28,16 @@ Those include:
 
 - **/Turtle_#/interrupt:** Used to pass an RLBInterrupt message. More details about the interrupt functionality is provided further down in the *rlb_controller* package description.
 
-- **/team_comms:** Maint topic used for intra-rlb communication. Contains information about the collision detection, goal selection etc…
+- **/team_comms:** Main topic used for intra-rlb communication. Contains information about the collision detection, goal selection etc…
+
+
+### Recording topics
+RLB topics' QOS differs from ROS's bag default one. As such a QOS override is necessary, and provided if necessary. It can be found in the `rlb_misc` folder.
+
+To bag the RLB key topics:
+```
+ros2 bag record -o <new directory name> --qos-profile-overrides-path qos_override.yaml /Turtle_1/pose /Turtle_1/interrupt /goals_backlog
+```
 
 ## RLB message types
 RLB uses a few custom messages, defined as follows:
@@ -62,14 +71,6 @@ string memo
 builtin_interfaces/Time stamp
 string type
 string memo
-```
-
-### Recording topics
-RLB topics' QOS differs from ROS's bag default one. As such a QOS override is necessary, and provided if necessary. It can be found in the `rlb_misc` folder.
-
-To bag the RLB key topics:
-```
-ros2 bag record -o <new directory name> --qos-profile-overrides-path qos_override.yaml /Turtle_1/pose /Turtle_1/interrupt /goals_backlog
 ```
 
 # Installation
