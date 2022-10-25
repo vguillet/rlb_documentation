@@ -1,3 +1,7 @@
+> **Warning** 
+> This document presents an incomplete overview of the RLB experimental framework. The documentation was written quickly to provide transparency on the functioning of the framework, and might contain errors
+
+
 The **R**obot **L**ab **B**ridge (**RLB**) framework is a generic robotics muti-agent interface based on ROS2 Foxy. 
 
 It aims at providing a framework and tools for running and testing single or multi-agent control and/or task allocation algorithms, using a combination of real and simulated data sources. The toolkit provides all necessary packages for fulfiling most simple experimental cases, from pre-implemented goto control laws for higher level coordination experiments to lower-level control. It also provides visualization tools, a set of emulator for simulating robots/communications/etc.
